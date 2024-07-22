@@ -213,6 +213,13 @@ with gr.Blocks() as demo:
     gr.Markdown('# EchoMimic')
     gr.Markdown('## Lifelike Audio-Driven Portrait Animations through Editable Landmark Conditioning')
     gr.Markdown('Inference time: from ~7mins/240frames to ~50s/240frames on V100 GPU')
+    gr.HTML("""
+    <div style="display:flex;column-gap:4px;">
+        <a href='https://badtobest.github.io/echomimic.html'><img src='https://img.shields.io/badge/Project-Page-blue'></a>
+        <a href='https://huggingface.co/BadToBest/EchoMimic'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow'></a>
+        <a href='https://arxiv.org/abs/2407.08136'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>
+    </div>
+    """)
     with gr.Row():
         with gr.Column():
             uploaded_img = gr.Image(type="filepath", label="Reference Image")

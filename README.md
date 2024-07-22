@@ -1,5 +1,5 @@
 ---
-title: EchoMimic Dev
+title: EchoMimic
 emoji: 🐨
 colorFrom: pink
 colorTo: blue
