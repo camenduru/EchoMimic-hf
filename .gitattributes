@@ -33,3 +33,11 @@ saved_model/**/* filter=lfs diff=lfs merge=lfs -text
 *.zip filter=lfs diff=lfs merge=lfs -text
 *.zst filter=lfs diff=lfs merge=lfs -text
 *tfevents* filter=lfs diff=lfs merge=lfs -text
+assets/driven_videos/a.mp4 filter=lfs diff=lfs merge=lfs -text
+assets/driven_videos/b.mp4 filter=lfs diff=lfs merge=lfs -text
+assets/driven_videos/c.mp4 filter=lfs diff=lfs merge=lfs -text
+assets/test_imgs/c.png filter=lfs diff=lfs merge=lfs -text
+assets/test_imgs/d.png filter=lfs diff=lfs merge=lfs -text
+assets/test_imgs/e.png filter=lfs diff=lfs merge=lfs -text
+assets/test_pose_demo_audios/movie_0_clip_0.wav filter=lfs diff=lfs merge=lfs -text
+src/utils/mp_models/face_landmarker_v2_with_blendshapes.task filter=lfs diff=lfs merge=lfs -text
