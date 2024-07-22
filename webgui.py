@@ -279,7 +279,6 @@ with gr.Blocks() as demo:
                 inputs = [uploaded_audio]
             )
             gr.HTML("""
-            <hr />
             <div style="display:flex;column-gap:4px;">
                 <a href="https://huggingface.co/spaces/fffiloni/EchoMimic?duplicate=true">
                     <img src="https://huggingface.co/datasets/huggingface/badges/resolve/main/duplicate-this-space-xl.svg" alt="Duplicate this Space">
