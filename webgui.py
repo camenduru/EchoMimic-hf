@@ -35,6 +35,10 @@ huggingface_hub.snapshot_download(
     local_dir_use_symlinks=False,
 )
 
+is_shared_ui = True if "fffiloni/EchoMimic" in os.environ['SPACE_ID'] else False
+available_property = False if is_shared_ui else True
+advanced_settings_label = "Advanced Configuration (only for duplicated spaces)" if is_shared_ui else "Advanced Configuration"
+
 default_values = {
     "width": 512,
     "height": 512,
@@ -224,26 +228,26 @@ with gr.Blocks() as demo:
         with gr.Column():
             uploaded_img = gr.Image(type="filepath", label="Reference Image")
             uploaded_audio = gr.Audio(type="filepath", label="Input Audio")
-            with gr.Accordion("Advanced Configuration", open=False):
+            with gr.Accordion(label=advanced_settings_label, open=False):
                 with gr.Row():
-                    width = gr.Slider(label="Width", minimum=128, maximum=1024, value=default_values["width"])
-                    height = gr.Slider(label="Height", minimum=128, maximum=1024, value=default_values["height"])
+                    width = gr.Slider(label="Width", minimum=128, maximum=1024, value=default_values["width"], interactive=available_property)
+                    height = gr.Slider(label="Height", minimum=128, maximum=1024, value=default_values["height"], interactive=available_property)
                 with gr.Row():
-                    length = gr.Slider(label="Length", minimum=100, maximum=5000, value=default_values["length"])
-                    seed = gr.Slider(label="Seed", minimum=0, maximum=10000, value=default_values["seed"])
+                    length = gr.Slider(label="Length", minimum=100, maximum=5000, value=default_values["length"], interactive=available_property)
+                    seed = gr.Slider(label="Seed", minimum=0, maximum=10000, value=default_values["seed"], interactive=available_property)
                 with gr.Row():
-                    facemask_dilation_ratio = gr.Slider(label="Facemask Dilation Ratio", minimum=0.0, maximum=1.0, step=0.01, value=default_values["facemask_dilation_ratio"])
-                    facecrop_dilation_ratio = gr.Slider(label="Facecrop Dilation Ratio", minimum=0.0, maximum=1.0, step=0.01, value=default_values["facecrop_dilation_ratio"])
+                    facemask_dilation_ratio = gr.Slider(label="Facemask Dilation Ratio", minimum=0.0, maximum=1.0, step=0.01, value=default_values["facemask_dilation_ratio"], interactive=available_property)
+                    facecrop_dilation_ratio = gr.Slider(label="Facecrop Dilation Ratio", minimum=0.0, maximum=1.0, step=0.01, value=default_values["facecrop_dilation_ratio"], interactive=available_property)
                 with gr.Row():
-                    context_frames = gr.Slider(label="Context Frames", minimum=0, maximum=50, step=1, value=default_values["context_frames"])
-                    context_overlap = gr.Slider(label="Context Overlap", minimum=0, maximum=10, step=1, value=default_values["context_overlap"])
+                    context_frames = gr.Slider(label="Context Frames", minimum=0, maximum=50, step=1, value=default_values["context_frames"], interactive=available_property)
+                    context_overlap = gr.Slider(label="Context Overlap", minimum=0, maximum=10, step=1, value=default_values["context_overlap"], interactive=available_property)
                 with gr.Row():
-                    cfg = gr.Slider(label="CFG", minimum=0.0, maximum=10.0, step=0.1, value=default_values["cfg"])
-                    steps = gr.Slider(label="Steps", minimum=1, maximum=100, step=1, value=default_values["steps"])
+                    cfg = gr.Slider(label="CFG", minimum=0.0, maximum=10.0, step=0.1, value=default_values["cfg"], interactive=available_property)
+                    steps = gr.Slider(label="Steps", minimum=1, maximum=100, step=1, value=default_values["steps"], interactive=available_property)
                 with gr.Row():
-                    sample_rate = gr.Slider(label="Sample Rate", minimum=8000, maximum=48000, step=1000, value=default_values["sample_rate"])
-                    fps = gr.Slider(label="FPS", minimum=1, maximum=60, step=1, value=default_values["fps"])
-                    device = gr.Radio(label="Device", choices=["cuda", "cpu"], value=default_values["device"])
+                    sample_rate = gr.Slider(label="Sample Rate", minimum=8000, maximum=48000, step=1000, value=default_values["sample_rate"], interactive=available_property)
+                    fps = gr.Slider(label="FPS", minimum=1, maximum=60, step=1, value=default_values["fps"], interactive=available_property)
+                    device = gr.Radio(label="Device", choices=["cuda", "cpu"], value=default_values["device"], interactive=available_property)
             generate_button = gr.Button("Generate Video")
         with gr.Column():
             output_video = gr.Video()
@@ -275,9 +279,15 @@ with gr.Blocks() as demo:
                 inputs = [uploaded_audio]
             )
             gr.HTML("""
-            <a href="https://huggingface.co/spaces/fffiloni/EchoMimic?duplicate=true">
-                <img src="https://huggingface.co/datasets/huggingface/badges/resolve/main/duplicate-this-space-xl.svg" alt="Duplicate this Space">
-            </a>
+            <hr />
+            <div style="display:flex;column-gap:4px;">
+                <a href="https://huggingface.co/spaces/fffiloni/EchoMimic?duplicate=true">
+                    <img src="https://huggingface.co/datasets/huggingface/badges/resolve/main/duplicate-this-space-xl.svg" alt="Duplicate this Space">
+                </a>
+                <a href="https://huggingface.co/fffiloni">
+                    <img src="https://huggingface.co/datasets/huggingface/badges/resolve/main/follow-me-on-HF-xl-dark.svg" alt="Follow me on HF">
+                </a>
+            </div>
             """)
 
     def generate_video(uploaded_img, uploaded_audio, width, height, length, seed, facemask_dilation_ratio, facecrop_dilation_ratio, context_frames, context_overlap, cfg, steps, sample_rate, fps, device):
