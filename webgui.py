@@ -211,30 +211,67 @@ def process_video(uploaded_img, uploaded_audio, width, height, length, seed, fac
   
 with gr.Blocks() as demo:
     gr.Markdown('# EchoMimic')
-    gr.Markdown('![]()')
+    gr.Markdown('## Lifelike Audio-Driven Portrait Animations through Editable Landmark Conditioning')
+    gr.Markdown('Inference time: from ~7mins/240frames to ~50s/240frames on V100 GPU')
     with gr.Row():
         with gr.Column():
             uploaded_img = gr.Image(type="filepath", label="Reference Image")
             uploaded_audio = gr.Audio(type="filepath", label="Input Audio")
+            with gr.Accordion("Advanced Configuration", open=False):
+                with gr.Row():
+                    width = gr.Slider(label="Width", minimum=128, maximum=1024, value=default_values["width"])
+                    height = gr.Slider(label="Height", minimum=128, maximum=1024, value=default_values["height"])
+                with gr.Row():
+                    length = gr.Slider(label="Length", minimum=100, maximum=5000, value=default_values["length"])
+                    seed = gr.Slider(label="Seed", minimum=0, maximum=10000, value=default_values["seed"])
+                with gr.Row():
+                    facemask_dilation_ratio = gr.Slider(label="Facemask Dilation Ratio", minimum=0.0, maximum=1.0, step=0.01, value=default_values["facemask_dilation_ratio"])
+                    facecrop_dilation_ratio = gr.Slider(label="Facecrop Dilation Ratio", minimum=0.0, maximum=1.0, step=0.01, value=default_values["facecrop_dilation_ratio"])
+                with gr.Row():
+                    context_frames = gr.Slider(label="Context Frames", minimum=0, maximum=50, step=1, value=default_values["context_frames"])
+                    context_overlap = gr.Slider(label="Context Overlap", minimum=0, maximum=10, step=1, value=default_values["context_overlap"])
+                with gr.Row():
+                    cfg = gr.Slider(label="CFG", minimum=0.0, maximum=10.0, step=0.1, value=default_values["cfg"])
+                    steps = gr.Slider(label="Steps", minimum=1, maximum=100, step=1, value=default_values["steps"])
+                with gr.Row():
+                    sample_rate = gr.Slider(label="Sample Rate", minimum=8000, maximum=48000, step=1000, value=default_values["sample_rate"])
+                    fps = gr.Slider(label="FPS", minimum=1, maximum=60, step=1, value=default_values["fps"])
+                    device = gr.Radio(label="Device", choices=["cuda", "cpu"], value=default_values["device"])
+            generate_button = gr.Button("Generate Video")
         with gr.Column():
             output_video = gr.Video()
-
-    with gr.Accordion("Configuration", open=False):
-        width = gr.Slider(label="Width", minimum=128, maximum=1024, value=default_values["width"])
-        height = gr.Slider(label="Height", minimum=128, maximum=1024, value=default_values["height"])
-        length = gr.Slider(label="Length", minimum=100, maximum=5000, value=default_values["length"])
-        seed = gr.Slider(label="Seed", minimum=0, maximum=10000, value=default_values["seed"])
-        facemask_dilation_ratio = gr.Slider(label="Facemask Dilation Ratio", minimum=0.0, maximum=1.0, step=0.01, value=default_values["facemask_dilation_ratio"])
-        facecrop_dilation_ratio = gr.Slider(label="Facecrop Dilation Ratio", minimum=0.0, maximum=1.0, step=0.01, value=default_values["facecrop_dilation_ratio"])
-        context_frames = gr.Slider(label="Context Frames", minimum=0, maximum=50, step=1, value=default_values["context_frames"])
-        context_overlap = gr.Slider(label="Context Overlap", minimum=0, maximum=10, step=1, value=default_values["context_overlap"])
-        cfg = gr.Slider(label="CFG", minimum=0.0, maximum=10.0, step=0.1, value=default_values["cfg"])
-        steps = gr.Slider(label="Steps", minimum=1, maximum=100, step=1, value=default_values["steps"])
-        sample_rate = gr.Slider(label="Sample Rate", minimum=8000, maximum=48000, step=1000, value=default_values["sample_rate"])
-        fps = gr.Slider(label="FPS", minimum=1, maximum=60, step=1, value=default_values["fps"])
-        device = gr.Radio(label="Device", choices=["cuda", "cpu"], value=default_values["device"])
-
-    generate_button = gr.Button("Generate Video")
+            gr.Examples(
+                label = "Portrait examples",
+                examples = [
+                    ['assets/test_imgs/a.png'],
+                    ['assets/test_imgs/b.png'],
+                    ['assets/test_imgs/c.png'],
+                    ['assets/test_imgs/d.png'],
+                    ['assets/test_imgs/e.png']
+                ],
+                inputs = [uploaded_img]
+            )
+            gr.Examples(
+                label = "Audio examples",
+                examples = [
+                    ['assets/test_audios/chunnuanhuakai.wav'],
+                    ['assets/test_audios/chunwang.wav'],
+                    ['assets/test_audios/echomimic_en_girl.wav'],
+                    ['assets/test_audios/echomimic_en.wav'],
+                    ['assets/test_audios/echomimic_girl.wav'],
+                    ['assets/test_audios/echomimic.wav'],
+                    ['assets/test_audios/jane.wav'],
+                    ['assets/test_audios/mei.wav'],
+                    ['assets/test_audios/walden.wav'],
+                    ['assets/test_audios/yun.wav'],
+                ],
+                inputs = [uploaded_audio]
+            )
+            gr.HTML("""
+            <a href="https://huggingface.co/spaces/fffiloni/EchoMimic?duplicate=true">
+                <img src="https://huggingface.co/datasets/huggingface/badges/resolve/main/duplicate-this-space-xl.svg" alt="Duplicate this Space">
+            </a>
+            """)
 
     def generate_video(uploaded_img, uploaded_audio, width, height, length, seed, facemask_dilation_ratio, facecrop_dilation_ratio, context_frames, context_overlap, cfg, steps, sample_rate, fps, device):
 
@@ -263,7 +300,8 @@ with gr.Blocks() as demo:
             fps,
             device
         ],
-        outputs=output_video
+        outputs=output_video,
+        show_api=False
     )
 parser = argparse.ArgumentParser(description='EchoMimic')
 parser.add_argument('--server_name', type=str, default='0.0.0.0', help='Server name')
@@ -273,5 +311,5 @@ args = parser.parse_args()
 # demo.launch(server_name=args.server_name, server_port=args.server_port, inbrowser=True)
 
 if __name__ == '__main__':
-    demo.launch()
+    demo.queue(max_size=3).launch(show_api=False, show_error=True)
     #demo.launch(server_name=args.server_name, server_port=args.server_port, inbrowser=True)
