@@ -27,6 +27,14 @@ import argparse
 
 import gradio as gr
 
+import huggingface_hub
+
+huggingface_hub.snapshot_download(
+    repo_id='BadToBest/EchoMimic',
+    local_dir='./pretrained_weights',
+    local_dir_use_symlinks=False,
+)
+
 default_values = {
     "width": 512,
     "height": 512,
@@ -265,5 +273,5 @@ args = parser.parse_args()
 # demo.launch(server_name=args.server_name, server_port=args.server_port, inbrowser=True)
 
 if __name__ == '__main__':
-    #demo.launch(server_name='0.0.0.0')
-    demo.launch(server_name=args.server_name, server_port=args.server_port, inbrowser=True)
+    demo.launch()
+    #demo.launch(server_name=args.server_name, server_port=args.server_port, inbrowser=True)
