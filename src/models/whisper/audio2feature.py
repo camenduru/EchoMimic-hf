@@ -11,7 +11,7 @@ class Audio2Feature():
                  model_path="./models/whisper/tiny.pt",
                  device="cuda"):
         self.whisper_model_type = whisper_model_type
-        self.model = load_model(model_path, device=device) #
+        self.model = load_model(model_path, device='cpu') #
 
     def get_sliced_feature(self,
                            feature_array, 
