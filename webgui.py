@@ -114,7 +114,7 @@ denoising_unet.load_state_dict(torch.load(config.denoising_unet_path, map_locati
 
 ## face locator init
 face_locator = FaceLocator(320, conditioning_channels=1, block_out_channels=(16, 32, 96, 256)).to(dtype=weight_dtype, device="cuda")
-face_locator.load_state_dict(torch.load(config.face_locator_path))
+face_locator.load_state_dict(torch.load(config.face_locator_path, map_location='cpu'))
 
 ## load audio processor params
 audio_processor = load_audio_model(model_path=config.audio_model_path, device=device)
