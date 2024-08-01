@@ -3,7 +3,7 @@
 '''
 webui
 '''
-
+import spaces
 import os
 import random
 from datetime import datetime
@@ -150,6 +150,7 @@ def select_face(det_bboxes, probs):
     sorted_bboxes = sorted(filtered_bboxes, key=lambda x:(x[3]-x[1]) * (x[2] - x[0]), reverse=True)
     return sorted_bboxes[0]
 
+@spaces.GPU
 def process_video(uploaded_img, uploaded_audio, width, height, length, seed, facemask_dilation_ratio, facecrop_dilation_ratio, context_frames, context_overlap, cfg, steps, sample_rate, fps, device):
 
     if seed is not None and seed > -1:
